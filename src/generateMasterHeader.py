@@ -4,20 +4,23 @@ __email__ = 'sahuankita2203@gmail.com'
 import gc
 import glob
 import os
+from configparser import ConfigParser
+
 import pandas as pd
 from astropy.io import fits
-from configparser import ConfigParser
 
 fits_file_extension_list = ["*fits", "*FITS", "*Fits"]
 
+
 class MasterHeader:
-    def __init__(self,config_filepath):
+    def __init__(self, config_filepath):
         self.config_filepath = os.getcwd() + "/" + config_filepath
         self.fits_filepath = None
         self.current_filepath = os.getcwd() + "/"
         pass
 
     def readConfigurationFile(self, mode="DEFAULT"):
+        print("\n********* run mode : {} **********\n".format(mode))
         config = ConfigParser()
         config.sections()
         config.read(self.config_filepath)
@@ -40,11 +43,11 @@ class MasterHeader:
                 df = pd.DataFrame(sorted(master_header))
                 df.to_csv(out_file, sep=',', index=False, header=False, encoding='utf-8')
                 del df
-        gc.collect()
 
 
 if __name__ == "__main__":
-    o_mh = MasterHeader("config.ini")
-    # o_mh.readConfigurationFile(mode="TEST")     # to be disabled when run in server
-    o_mh.readConfigurationFile()      # to be enabled when run in server
-    o_mh.generateMasterHeaderCSV(telescope_name="DOT")
+    o_masterheader = MasterHeader("config.ini")
+    # o_masterheader.readConfigurationFile(mode="TEST")     # to be disabled when run in server
+    o_masterheader.readConfigurationFile()  # to be enabled when run in server
+    o_masterheader.generateMasterHeaderCSV(telescope_name="DOT")
+    gc.collect()
